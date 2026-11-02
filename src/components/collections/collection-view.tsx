@@ -13,14 +13,19 @@ import {
 import {
   SortDropdown,
   SortOption,
+  MobileSortModal,
+  SORT_OPTIONS,
 } from "@/components/collections/sort-dropdown";
 import { MOCK_PRODUCTS } from "@/data/mock-catalog";
 import {
   SlidersHorizontal,
+  ArrowUpDown,
   RotateCcw,
   ChevronLeft,
   ChevronRight,
   PackageOpen,
+  X,
+  Zap,
 } from "lucide-react";
 
 export interface CollectionViewProps {
@@ -54,6 +59,7 @@ export function CollectionView({
   const [sortOption, setSortOption] = React.useState<SortOption>(sortParam);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = React.useState(false);
+  const [isSortSheetOpen, setIsSortSheetOpen] = React.useState(false);
 
   const ITEMS_PER_PAGE = 8;
 
@@ -199,14 +205,18 @@ export function CollectionView({
     return sortedProducts.slice(start, start + ITEMS_PER_PAGE);
   }, [sortedProducts, currentPage]);
 
-  const hasActiveFilters =
-    filters.search !== "" ||
-    filters.category !== "all" ||
-    (filters.subCategory && filters.subCategory !== "all") ||
-    filters.selectedColors.length > 0 ||
-    filters.selectedSizes.length > 0 ||
-    filters.priceRange !== "all" ||
-    filters.inStockOnly;
+  const activeFacetCount =
+    (filters.search ? 1 : 0) +
+    (filters.subCategory && filters.subCategory !== "all" ? 1 : 0) +
+    (filters.priceRange !== "all" ? 1 : 0) +
+    (filters.inStockOnly ? 1 : 0) +
+    filters.selectedColors.length +
+    filters.selectedSizes.length;
+
+  const hasActiveFacetFilters = activeFacetCount > 0;
+
+  const currentSortLabel =
+    SORT_OPTIONS.find((s) => s.value === sortOption)?.shortLabel || "Recommended";
 
   return (
     <div className="w-full bg-aurelle-ivory min-h-screen">
@@ -224,94 +234,230 @@ export function CollectionView({
         }}
       />
 
-      {/* 2. Main Catalog Body with Sidebar and Grid */}
-      <Container size="wide" className="py-12">
-        {/* Top Control Bar: Mobile Filter Trigger & Sort Dropdown */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between pb-6 mb-8 border-b border-aurelle-border gap-4">
-          <div className="flex items-center gap-3">
-            {/* Mobile Filter Toggle */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsMobileFilterOpen(true)}
-              className="lg:hidden gap-2 text-xs border-aurelle-border"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-aurelle-burgundy" />
-              Filter Catalog ({filteredProducts.length})
-            </Button>
+      {/* 2. Sleek E-Commerce Control Bar (Myntra / Ajio / Amazon style) */}
+      {/* Mobile Sticky Filter/Sort Bar */}
+      <div className="lg:hidden sticky top-16 z-30 bg-white/95 backdrop-blur-md border-y border-aurelle-border shadow-2xs">
+        <div className="grid grid-cols-2 divide-x divide-aurelle-border">
+          {/* Sort Button */}
+          <button
+            type="button"
+            onClick={() => setIsSortSheetOpen(true)}
+            className="flex items-center justify-center gap-2 py-3 px-2 text-xs uppercase tracking-wider font-semibold text-aurelle-ink hover:bg-neutral-50 active:bg-neutral-100 transition-colors"
+          >
+            <ArrowUpDown className="w-3.5 h-3.5 text-aurelle-burgundy" />
+            <span className="truncate">Sort: {currentSortLabel}</span>
+          </button>
 
-            <span className="text-xs uppercase tracking-wider text-aurelle-muted font-medium hidden sm:inline-block">
-              Showing{" "}
-              <strong className="text-aurelle-ink font-semibold">
-                {paginatedProducts.length}
-              </strong>{" "}
-              of {sortedProducts.length} Creations
-            </span>
-          </div>
-
-          {/* Sort Selector */}
-          <SortDropdown
-            currentSort={sortOption}
-            onSortChange={(s) => {
-              setSortOption(s);
-              setCurrentPage(1);
-            }}
-          />
+          {/* Filter Button */}
+          <button
+            type="button"
+            onClick={() => setIsMobileFilterOpen(true)}
+            className="flex items-center justify-center gap-2 py-3 px-2 text-xs uppercase tracking-wider font-semibold text-aurelle-ink hover:bg-neutral-50 active:bg-neutral-100 transition-colors"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5 text-aurelle-burgundy" />
+            <span>Filter</span>
+            {activeFacetCount > 0 && (
+              <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-aurelle-burgundy text-white text-[10px] font-bold flex items-center justify-center">
+                {activeFacetCount}
+              </span>
+            )}
+          </button>
         </div>
 
-        {/* Active Filters Badges */}
-        {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-2 mb-8 p-3 bg-white border border-aurelle-border text-xs">
+        {/* Quick Fast-Filter Horizontal Chips (Myntra & Flipkart style) */}
+        <div className="flex items-center gap-2 overflow-x-auto py-2 px-3 border-t border-neutral-100 bg-[#FCFBF8] scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {/* In-Stock Fast Toggle */}
+          <button
+            type="button"
+            onClick={() => {
+              setFilters((prev) => ({ ...prev, inStockOnly: !prev.inStockOnly }));
+              setCurrentPage(1);
+            }}
+            className={`px-3 py-1 text-[11px] rounded-full whitespace-nowrap border transition-all cursor-pointer flex items-center gap-1 ${
+              filters.inStockOnly
+                ? "bg-aurelle-burgundy text-white border-aurelle-burgundy font-semibold"
+                : "bg-white text-aurelle-charcoal border-aurelle-border hover:border-aurelle-muted"
+            }`}
+          >
+            <Zap className="w-3 h-3" />
+            Ready to Ship
+          </button>
+
+          {/* Price Fast Toggles */}
+          {[
+            { label: "Under ₹20k", value: "under-20k" },
+            { label: "₹20k - ₹40k", value: "20k-40k" },
+            { label: "₹40k - ₹70k", value: "40k-70k" },
+            { label: "Above ₹70k", value: "above-70k" },
+          ].map((tier) => {
+            const isSelected = filters.priceRange === tier.value;
+            return (
+              <button
+                key={tier.value}
+                type="button"
+                onClick={() => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    priceRange: isSelected ? "all" : tier.value,
+                  }));
+                  setCurrentPage(1);
+                }}
+                className={`px-3 py-1 text-[11px] rounded-full whitespace-nowrap border transition-all cursor-pointer ${
+                  isSelected
+                    ? "bg-aurelle-burgundy text-white border-aurelle-burgundy font-semibold"
+                    : "bg-white text-aurelle-charcoal border-aurelle-border hover:border-aurelle-muted"
+                }`}
+              >
+                {tier.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Container size="wide" className="py-4 sm:py-6">
+        {/* Desktop Top Control Bar */}
+        <div className="hidden lg:flex items-center justify-between pb-4 mb-4 border-b border-aurelle-border">
+          <div className="text-xs uppercase tracking-wider text-aurelle-muted font-medium">
+            Showing <strong className="text-aurelle-ink font-semibold">{paginatedProducts.length}</strong> of {sortedProducts.length} Creations
+          </div>
+
+          <div className="flex items-center gap-4">
+            <SortDropdown currentSort={sortOption} onSortChange={setSortOption} />
+          </div>
+        </div>
+
+        {/* Lightweight Active Filters Row (Zero bulky boxes!) */}
+        {hasActiveFacetFilters && (
+          <div className="flex flex-wrap items-center gap-2 mb-4 text-xs animate-fadeIn">
             <span className="text-[11px] uppercase tracking-wider text-aurelle-muted font-semibold mr-1">
               Active Filters:
             </span>
-            {filters.category !== "all" && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]">
-                Category: {filters.category}
-              </span>
-            )}
+
+            {/* Sub-Category pill */}
             {filters.subCategory && filters.subCategory !== "all" && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]">
-                Sub-Category: {filters.subCategory}
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-aurelle-ink border border-aurelle-border text-[11px] shadow-2xs">
+                {filters.subCategory}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFilters((prev) => ({ ...prev, subCategory: "all" }));
+                    setCurrentPage(1);
+                  }}
+                  className="hover:text-rose-600 transition-colors cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
+
+            {/* Search query pill */}
             {filters.search && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]">
-                Search: &ldquo;{filters.search}&rdquo;
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-aurelle-ink border border-aurelle-border text-[11px] shadow-2xs">
+                &ldquo;{filters.search}&rdquo;
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFilters((prev) => ({ ...prev, search: "" }));
+                    setCurrentPage(1);
+                  }}
+                  className="hover:text-rose-600 transition-colors cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
+
+            {/* Price pill */}
             {filters.priceRange !== "all" && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]">
-                Price Filter Active
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-aurelle-ink border border-aurelle-border text-[11px] shadow-2xs">
+                {filters.priceRange === "under-20k" && "Under ₹20,000"}
+                {filters.priceRange === "20k-40k" && "₹20,000 - ₹40,000"}
+                {filters.priceRange === "40k-70k" && "₹40,000 - ₹70,000"}
+                {filters.priceRange === "above-70k" && "Above ₹70,000"}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFilters((prev) => ({ ...prev, priceRange: "all" }));
+                    setCurrentPage(1);
+                  }}
+                  className="hover:text-rose-600 transition-colors cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
+
+            {/* In-stock pill */}
             {filters.inStockOnly && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]">
-                In-Stock Only
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-aurelle-ink border border-aurelle-border text-[11px] shadow-2xs">
+                Ready to Ship
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFilters((prev) => ({ ...prev, inStockOnly: false }));
+                    setCurrentPage(1);
+                  }}
+                  className="hover:text-rose-600 transition-colors cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
+
+            {/* Colors */}
             {filters.selectedColors.map((color) => (
               <span
                 key={color}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-aurelle-ink border border-aurelle-border text-[11px] shadow-2xs"
               >
-                Color: {color}
+                {color}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      selectedColors: prev.selectedColors.filter((c) => c !== color),
+                    }));
+                    setCurrentPage(1);
+                  }}
+                  className="hover:text-rose-600 transition-colors cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             ))}
+
+            {/* Sizes */}
             {filters.selectedSizes.map((size) => (
               <span
                 key={size}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-aurelle-ink border border-aurelle-border text-[11px] shadow-2xs"
               >
-                Size: {size}
+                {size}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      selectedSizes: prev.selectedSizes.filter((s) => s !== size),
+                    }));
+                    setCurrentPage(1);
+                  }}
+                  className="hover:text-rose-600 transition-colors cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             ))}
+
+            {/* Clear All text button */}
             <button
               type="button"
               onClick={handleResetFilters}
-              className="text-[11px] uppercase tracking-wider text-aurelle-burgundy hover:underline font-semibold ml-2"
+              className="text-[11px] uppercase tracking-wider text-aurelle-burgundy hover:underline font-semibold ml-2 cursor-pointer"
             >
-              Reset All
+              Clear All
             </button>
           </div>
         )}
@@ -422,6 +568,17 @@ export function CollectionView({
           </div>
         </div>
       </Container>
+
+      {/* Mobile Sort Slide-Up Modal (Myntra / Ajio style) */}
+      <MobileSortModal
+        isOpen={isSortSheetOpen}
+        onClose={() => setIsSortSheetOpen(false)}
+        currentSort={sortOption}
+        onSortChange={(s) => {
+          setSortOption(s);
+          setCurrentPage(1);
+        }}
+      />
     </div>
   );
 }

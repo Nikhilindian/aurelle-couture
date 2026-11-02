@@ -249,30 +249,44 @@ export function FilterSidebar({
           />
           <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white p-4 sm:p-6 shadow-2xl flex flex-col justify-between overflow-y-auto">
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-aurelle-border mb-4 sm:mb-6">
-                <span className="font-serif text-lg text-aurelle-ink">
-                  Filter Catalog ({totalResults})
-                </span>
-                <button
-                  type="button"
-                  onClick={onCloseMobile}
-                  className="min-h-[40px] min-w-[40px] flex items-center justify-center p-1.5 text-aurelle-ink hover:text-aurelle-burgundy"
-                  aria-label="Close Filter Sheet"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+              <div className="flex items-center justify-between pb-4 border-b border-aurelle-border mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="font-serif text-lg text-aurelle-ink font-normal">
+                    Filters
+                  </span>
+                  <span className="text-[11px] text-aurelle-muted font-medium">
+                    ({totalResults} items)
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={onReset}
+                    className="text-xs uppercase tracking-wider text-aurelle-burgundy hover:underline font-semibold"
+                  >
+                    Clear All
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onCloseMobile}
+                    className="min-h-[40px] min-w-[40px] flex items-center justify-center p-1.5 text-aurelle-ink hover:text-aurelle-burgundy"
+                    aria-label="Close Filter Sheet"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
               {filterContent}
             </div>
 
-            <div className="pt-6 mt-8 border-t border-aurelle-border">
+            <div className="pt-4 mt-6 border-t border-aurelle-border sticky bottom-0 bg-white">
               <Button
                 variant="burgundy"
                 size="md"
-                className="w-full"
+                className="w-full text-xs uppercase tracking-widest font-semibold"
                 onClick={onCloseMobile}
               >
-                View {totalResults} Drapes
+                Apply Filters ({totalResults} Items)
               </Button>
             </div>
           </div>
