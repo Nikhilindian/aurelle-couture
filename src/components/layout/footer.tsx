@@ -116,14 +116,13 @@ export function Footer() {
             {/* Shop Categories */}
             <div className="md:col-span-2 space-y-3 text-left">
               <h5 className="text-xs uppercase tracking-widest font-semibold text-white">
-                Collections
+                Categories
               </h5>
               <ul className="text-xs space-y-2.5 text-[#A69E96]">
-                <li><Link href="/collections?category=Sarees" className="hover:text-white transition-colors">Banarasi Sarees</Link></li>
-                <li><Link href="/collections?category=Lehengas" className="hover:text-white transition-colors">Bridal Lehengas</Link></li>
-                <li><Link href="/collections?category=Kurta+Sets" className="hover:text-white transition-colors">Anarkali &amp; Kurta Sets</Link></li>
-                <li><Link href="/collections?category=Dupattas" className="hover:text-white transition-colors">Chanderi Silks &amp; Dupattas</Link></li>
-                <li><Link href="/collections" className="hover:text-white transition-colors">Full Archive</Link></li>
+                <li><Link href="/collections" className="hover:text-white transition-colors">All Collections</Link></li>
+                <li><Link href="/collections?category=Clothing" className="hover:text-white transition-colors">Clothing &amp; Couture</Link></li>
+                <li><Link href="/collections?category=Jewellery" className="hover:text-white transition-colors">Heirloom Jewellery</Link></li>
+                <li><Link href="/collections?category=Kids" className="hover:text-white transition-colors">Royal Kids</Link></li>
               </ul>
             </div>
 

@@ -24,43 +24,35 @@ export interface CollectionHeaderProps {
 const CATEGORY_ITEMS: CategoryIconItem[] = [
   {
     id: "cat-all",
-    label: "For You",
+    label: "All",
     value: "all",
     imageUrl:
       "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=300&q=80",
     badge: "All",
   },
   {
-    id: "cat-sarees",
-    label: "Sarees",
-    value: "Sarees",
+    id: "cat-clothing",
+    label: "Clothing",
+    value: "Clothing",
     imageUrl:
       "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=300&q=80",
-    badge: "Katan",
+    badge: "Couture",
   },
   {
-    id: "cat-lehengas",
-    label: "Lehengas",
-    value: "Lehengas",
+    id: "cat-jewellery",
+    label: "Jewellery",
+    value: "Jewellery",
     imageUrl:
-      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=300&q=80",
-    badge: "Bridal",
+      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=300&q=80",
+    badge: "Heirloom",
   },
   {
-    id: "cat-kurtas",
-    label: "Kurta Sets",
-    value: "Kurta Sets",
+    id: "cat-kids",
+    label: "Kids",
+    value: "Kids",
     imageUrl:
-      "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=300&q=80",
+      "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=300&q=80",
     badge: "Festive",
-  },
-  {
-    id: "cat-dupattas",
-    label: "Dupattas",
-    value: "Dupattas",
-    imageUrl:
-      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=300&q=80",
-    badge: "Silk",
   },
 ];
 
@@ -184,12 +176,14 @@ export function CollectionHeader({
           </div>
         </div>
 
-        {/* 2. Category Icon Rail (Identical to Image 1 Category Row) */}
+        {/* 2. Category Icon Rail (4 Categories: All, Clothing, Jewellery, Kids) */}
         <div className="pt-2">
-          {/* Scrollable Container with complete scrollbar suppression */}
-          <div className="flex items-center justify-start sm:justify-center gap-3 sm:gap-6 overflow-x-auto py-2 px-2 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {/* Symmetrical 4-item grid on mobile and desktop */}
+          <div className="grid grid-cols-4 max-w-sm sm:max-w-md mx-auto gap-2 sm:gap-4 py-2 px-1">
             {CATEGORY_ITEMS.map((item) => {
-              const isActive = currentCategory === item.value;
+              const isActive =
+                currentCategory.toLowerCase() === item.value.toLowerCase() ||
+                (item.value === "all" && (currentCategory === "all" || !currentCategory));
               return (
                 <button
                   key={item.id}

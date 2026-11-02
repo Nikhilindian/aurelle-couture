@@ -125,7 +125,7 @@ export default function AdminDashboardPage() {
   // New Product Form States
   const [newTitle, setNewTitle] = React.useState("");
   const [newSlug, setNewSlug] = React.useState("");
-  const [newCategory, setNewCategory] = React.useState("Sarees");
+  const [newCategory, setNewCategory] = React.useState("Clothing");
   const [newSku, setNewSku] = React.useState("");
   const [newPriceRupees, setNewPriceRupees] = React.useState("28500");
   const [newCompareAtRupees, setNewCompareAtRupees] = React.useState("");

@@ -10,14 +10,16 @@ import { ArrowUpRight } from "lucide-react";
 export function CollectionGrid() {
   const getCategoryParam = (slug: string) => {
     switch (slug) {
+      case "clothing":
       case "banarasi-sarees":
-        return "Sarees";
       case "bridal-lehengas":
-        return "Lehengas";
       case "kurta-sets":
-        return "Kurta Sets";
       case "chanderi-dupattas":
-        return "Dupattas";
+        return "Clothing";
+      case "jewellery":
+        return "Jewellery";
+      case "kids":
+        return "Kids";
       default:
         return "all";
     }

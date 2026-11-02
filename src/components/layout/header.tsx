@@ -49,10 +49,9 @@ export function Header() {
 
   const navLinks = [
     { label: "All Collections", href: "/collections" },
-    { label: "Sarees", href: "/collections?category=Sarees" },
-    { label: "Lehengas", href: "/collections?category=Lehengas" },
-    { label: "Kurta Sets", href: "/collections?category=Kurta+Sets" },
-    { label: "Dupattas", href: "/collections?category=Dupattas" },
+    { label: "Clothing", href: "/collections?category=Clothing" },
+    { label: "Jewellery", href: "/collections?category=Jewellery" },
+    { label: "Kids", href: "/collections?category=Kids" },
     { label: "Track Order", href: "/track-order" },
   ];
 

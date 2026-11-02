@@ -23,12 +23,12 @@ export interface SearchModalProps {
 }
 
 const POPULAR_SEARCH_TAGS = [
+  "Clothing",
+  "Jewellery",
+  "Kids",
   "Banarasi Sarees",
   "Bridal Lehengas",
-  "Mulberry Katan",
-  "Kadwa Zari",
-  "Anarkali Sets",
-  "Dupattas",
+  "Polki Choker",
   "New In",
 ];
 

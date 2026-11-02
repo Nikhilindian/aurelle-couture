@@ -95,11 +95,12 @@ export function CollectionView({
       }
 
       // 1. Category
-      if (filters.category !== "all") {
+      if (filters.category && filters.category !== "all") {
         const catFilter = filters.category.toLowerCase();
         const matchesCatName = product.category.toLowerCase() === catFilter;
         const matchesCatSlug = product.categorySlug.toLowerCase() === catFilter;
-        if (!matchesCatName && !matchesCatSlug) return false;
+        const matchesSubCat = !!product.subCategory && product.subCategory.toLowerCase() === catFilter;
+        if (!matchesCatName && !matchesCatSlug && !matchesSubCat) return false;
       }
 
       // 2. Search text
