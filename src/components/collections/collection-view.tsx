@@ -234,38 +234,42 @@ export function CollectionView({
         }}
       />
 
-      {/* 2. Sleek E-Commerce Control Bar (Myntra / Ajio / Amazon style) */}
-      {/* Mobile Sticky Filter/Sort Bar */}
-      <div className="lg:hidden sticky top-16 z-30 bg-white/95 backdrop-blur-md border-y border-aurelle-border shadow-2xs">
-        <div className="grid grid-cols-2 divide-x divide-aurelle-border">
-          {/* Sort Button */}
-          <button
-            type="button"
-            onClick={() => setIsSortSheetOpen(true)}
-            className="flex items-center justify-center gap-2 py-3 px-2 text-xs uppercase tracking-wider font-semibold text-aurelle-ink hover:bg-neutral-50 active:bg-neutral-100 transition-colors"
-          >
-            <ArrowUpDown className="w-3.5 h-3.5 text-aurelle-burgundy" />
-            <span className="truncate">Sort: {currentSortLabel}</span>
-          </button>
+      {/* 2. Sleek E-Commerce Control Bar (AJIO & Myntra style) */}
+      {/* Mobile Sticky Ultra-Compact Bar */}
+      <div className="lg:hidden sticky top-16 z-30 bg-white border-b border-aurelle-border shadow-2xs">
+        <div className="flex items-center justify-between h-10 px-3 bg-white">
+          <span className="text-[11px] uppercase tracking-wider font-semibold text-aurelle-muted">
+            {sortedProducts.length} Items
+          </span>
 
-          {/* Filter Button */}
-          <button
-            type="button"
-            onClick={() => setIsMobileFilterOpen(true)}
-            className="flex items-center justify-center gap-2 py-3 px-2 text-xs uppercase tracking-wider font-semibold text-aurelle-ink hover:bg-neutral-50 active:bg-neutral-100 transition-colors"
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-aurelle-burgundy" />
-            <span>Filter</span>
-            {activeFacetCount > 0 && (
-              <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-aurelle-burgundy text-white text-[10px] font-bold flex items-center justify-center">
-                {activeFacetCount}
-              </span>
-            )}
-          </button>
+          <div className="flex items-center divide-x divide-aurelle-border h-full">
+            <button
+              type="button"
+              onClick={() => setIsSortSheetOpen(true)}
+              className="flex items-center gap-1.5 px-3 h-full text-[11px] uppercase tracking-wider font-bold text-aurelle-ink active:bg-neutral-100"
+            >
+              <ArrowUpDown className="w-3.5 h-3.5 text-aurelle-burgundy" />
+              <span>{currentSortLabel}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsMobileFilterOpen(true)}
+              className="flex items-center gap-1.5 pl-3 h-full text-[11px] uppercase tracking-wider font-bold text-aurelle-ink active:bg-neutral-100 relative"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-aurelle-burgundy" />
+              <span>Filter</span>
+              {activeFacetCount > 0 && (
+                <span className="w-4 h-4 rounded-full bg-aurelle-burgundy text-white text-[9px] font-bold flex items-center justify-center">
+                  {activeFacetCount}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Quick Fast-Filter Horizontal Chips (Myntra & Flipkart style) */}
-        <div className="flex items-center gap-2 overflow-x-auto py-2 px-3 border-t border-neutral-100 bg-[#FCFBF8] scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Quick Fast-Filter Horizontal Chips (Myntra & AJIO style) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto py-1.5 px-3 border-t border-neutral-100 bg-[#FAF9F6] scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {/* In-Stock Fast Toggle */}
           <button
             type="button"
@@ -273,13 +277,13 @@ export function CollectionView({
               setFilters((prev) => ({ ...prev, inStockOnly: !prev.inStockOnly }));
               setCurrentPage(1);
             }}
-            className={`px-3 py-1 text-[11px] rounded-full whitespace-nowrap border transition-all cursor-pointer flex items-center gap-1 ${
+            className={`px-2.5 py-0.5 text-[10px] rounded-full whitespace-nowrap border transition-all cursor-pointer flex items-center gap-1 ${
               filters.inStockOnly
                 ? "bg-aurelle-burgundy text-white border-aurelle-burgundy font-semibold"
                 : "bg-white text-aurelle-charcoal border-aurelle-border hover:border-aurelle-muted"
             }`}
           >
-            <Zap className="w-3 h-3" />
+            <Zap className="w-2.5 h-2.5" />
             Ready to Ship
           </button>
 
@@ -302,7 +306,7 @@ export function CollectionView({
                   }));
                   setCurrentPage(1);
                 }}
-                className={`px-3 py-1 text-[11px] rounded-full whitespace-nowrap border transition-all cursor-pointer ${
+                className={`px-2.5 py-0.5 text-[10px] rounded-full whitespace-nowrap border transition-all cursor-pointer ${
                   isSelected
                     ? "bg-aurelle-burgundy text-white border-aurelle-burgundy font-semibold"
                     : "bg-white text-aurelle-charcoal border-aurelle-border hover:border-aurelle-muted"
@@ -315,7 +319,7 @@ export function CollectionView({
         </div>
       </div>
 
-      <Container size="wide" className="py-4 sm:py-6">
+      <Container size="wide" className="px-2 sm:px-6 pt-2 pb-8 sm:py-8">
         {/* Desktop Top Control Bar */}
         <div className="hidden lg:flex items-center justify-between pb-4 mb-4 border-b border-aurelle-border">
           <div className="text-xs uppercase tracking-wider text-aurelle-muted font-medium">

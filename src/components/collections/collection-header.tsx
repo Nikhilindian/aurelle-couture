@@ -153,34 +153,34 @@ export function CollectionHeader({
   };
 
   return (
-    <div className="bg-[#181615] text-white pt-6 pb-6 sm:pt-10 sm:pb-8 border-b border-aurelle-charcoal relative overflow-hidden">
+    <div className="bg-[#181615] text-white pt-3 pb-3 sm:pt-8 sm:pb-6 border-b border-aurelle-charcoal relative overflow-hidden">
       {/* Subtle luxury gold grid texture */}
       <div className="absolute inset-0 bg-[radial-gradient(#C5A880_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none" />
 
-      <Container size="wide" className="relative z-10 space-y-4 sm:space-y-6">
-        {/* Editorial Heading */}
-        <div className="text-center space-y-1 sm:space-y-2">
-          <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-aurelle-gold font-semibold block">
+      <Container size="wide" className="relative z-10 space-y-2.5 sm:space-y-5">
+        {/* Editorial Heading (Clean & Compact on Mobile) */}
+        <div className="text-center space-y-0.5 sm:space-y-1">
+          <span className="text-[8px] sm:text-[10px] uppercase tracking-[0.3em] text-aurelle-gold font-semibold block">
             The Aurelle Haute Catalog
           </span>
-          <h1 className="text-2xl sm:text-4xl font-serif text-white font-normal tracking-wide">
+          <h1 className="text-base sm:text-3xl font-serif text-white font-normal tracking-wide">
             Handcrafted Indian Couture
           </h1>
-          <p className="text-[11px] sm:text-xs text-[#C9C3BA] max-w-lg mx-auto">
+          <p className="hidden sm:block text-xs text-[#C9C3BA] max-w-lg mx-auto">
             Woven by master weavers on ancestral pit looms • {totalCount} authentic creations
           </p>
         </div>
 
-        {/* 1. Top Search Bar (Quick-Commerce Style like Image 1) */}
+        {/* 1. Top Search Bar */}
         <div className="max-w-xl mx-auto px-1 sm:px-0">
-          <div className="relative flex items-center bg-white text-aurelle-ink rounded-full shadow-lg border border-aurelle-gold/30 px-3.5 py-2 sm:py-2.5 transition-all focus-within:ring-2 focus-within:ring-aurelle-gold">
-            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-aurelle-muted shrink-0 mr-2" />
+          <div className="relative flex items-center bg-white text-aurelle-ink rounded-full shadow-md border border-aurelle-gold/30 px-3 py-1.5 sm:py-2.5 transition-all focus-within:ring-2 focus-within:ring-aurelle-gold">
+            <Search className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-aurelle-muted shrink-0 mr-2" />
             <input
               ref={inputRef}
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
-              placeholder="Search in Couture (e.g. Sarees, Lehengas, Zari...)"
+              placeholder="Search in Couture (e.g. Sarees, Lehengas...)"
               className="flex-1 bg-transparent text-xs sm:text-sm text-aurelle-ink placeholder:text-aurelle-muted/70 outline-none font-sans"
             />
             {searchQuery && (
@@ -199,7 +199,7 @@ export function CollectionHeader({
             <button
               type="button"
               onClick={handleVoiceSearch}
-              className={`p-1.5 rounded-full transition-colors flex items-center justify-center cursor-pointer ${
+              className={`p-1 rounded-full transition-colors flex items-center justify-center cursor-pointer ${
                 isListening
                   ? "bg-red-500 text-white animate-pulse"
                   : "text-aurelle-muted hover:text-aurelle-burgundy hover:bg-stone-100"
@@ -208,18 +208,18 @@ export function CollectionHeader({
               aria-label="Voice search"
             >
               {isListening ? (
-                <MicOff className="w-4 h-4" />
+                <MicOff className="w-3.5 h-3.5" />
               ) : (
-                <Mic className="w-4 h-4 text-aurelle-burgundy" />
+                <Mic className="w-3.5 h-3.5 text-aurelle-burgundy" />
               )}
             </button>
           </div>
         </div>
 
         {/* 2. Category Icon Rail (4 Categories: All, Clothing, Jewellery, Kids) */}
-        <div className="pt-2">
+        <div className="pt-1">
           {/* Symmetrical 4-item grid on mobile and desktop */}
-          <div className="grid grid-cols-4 max-w-sm sm:max-w-md mx-auto gap-2 sm:gap-4 py-2 px-1">
+          <div className="grid grid-cols-4 max-w-xs sm:max-w-md mx-auto gap-1 sm:gap-4 py-1 px-1">
             {CATEGORY_ITEMS.map((item) => {
               const isActive =
                 currentCategory.toLowerCase() === item.value.toLowerCase() ||
@@ -229,13 +229,13 @@ export function CollectionHeader({
                   key={item.id}
                   type="button"
                   onClick={() => onSelectCategory(item.value)}
-                  className="flex flex-col items-center gap-1.5 shrink-0 group focus:outline-none cursor-pointer"
+                  className="flex flex-col items-center gap-1 shrink-0 group focus:outline-none cursor-pointer"
                 >
                   {/* Category Image Avatar */}
                   <div
-                    className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 transition-all duration-300 p-0.5 ${
+                    className={`relative w-11 h-11 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all duration-300 p-0.5 ${
                       isActive
-                        ? "border-aurelle-gold ring-2 ring-aurelle-gold/60 shadow-[0_0_15px_rgba(197,168,128,0.4)] scale-105"
+                        ? "border-aurelle-gold ring-2 ring-aurelle-gold/60 shadow-[0_0_12px_rgba(197,168,128,0.4)] scale-105"
                         : "border-white/20 group-hover:border-aurelle-gold/60 group-hover:scale-105 opacity-85 group-hover:opacity-100"
                     }`}
                   >
@@ -244,11 +244,11 @@ export function CollectionHeader({
                       alt={item.label}
                       fill
                       sizes="64px"
-                      className="object-cover rounded-[14px]"
+                      className="object-cover rounded-[10px] sm:rounded-[14px]"
                     />
                     {/* Badge Overlay */}
                     {item.badge && (
-                      <span className="absolute bottom-0 inset-x-0 bg-black/75 text-[8px] uppercase tracking-wider text-aurelle-gold text-center py-0.5 font-bold">
+                      <span className="absolute bottom-0 inset-x-0 bg-black/75 text-[7px] sm:text-[8px] uppercase tracking-wider text-aurelle-gold text-center py-0.2 sm:py-0.5 font-bold">
                         {item.badge}
                       </span>
                     )}
@@ -256,7 +256,7 @@ export function CollectionHeader({
 
                   {/* Category Label */}
                   <span
-                    className={`text-[10px] sm:text-[11px] uppercase tracking-wider font-medium transition-colors ${
+                    className={`text-[9px] sm:text-[11px] uppercase tracking-wider font-semibold transition-colors ${
                       isActive
                         ? "text-aurelle-gold font-bold"
                         : "text-[#D8D2CA] group-hover:text-white"
@@ -267,7 +267,7 @@ export function CollectionHeader({
 
                   {/* Active Indicator Underline */}
                   {isActive && (
-                    <div className="w-4 h-0.5 bg-aurelle-gold rounded-full -mt-0.5 animate-fadeIn" />
+                    <div className="w-3 sm:w-4 h-0.5 bg-aurelle-gold rounded-full -mt-0.5 animate-fadeIn" />
                   )}
                 </button>
               );
@@ -277,8 +277,8 @@ export function CollectionHeader({
 
         {/* 3. Sub-Categories Pill Rail (e.g. Sarees, Lehengas, Chokers, Sherwanis) */}
         {onSelectSubCategory && subCategories && (
-          <div className="pt-2 pb-1 border-t border-white/10 mt-2">
-            <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto py-1 px-1 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="pt-1 pb-0.5 border-t border-white/10 mt-1">
+            <div className="flex items-center justify-start sm:justify-center gap-1.5 overflow-x-auto py-0.5 px-1 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {subCategories.map((sub) => {
                 const isSubActive =
                   (currentSubCategory === "all" || !currentSubCategory)
@@ -289,9 +289,9 @@ export function CollectionHeader({
                     key={sub.label}
                     type="button"
                     onClick={() => onSelectSubCategory(sub.value)}
-                    className={`px-3 sm:px-3.5 py-1 text-[11px] sm:text-xs rounded-full whitespace-nowrap transition-all duration-200 border cursor-pointer select-none ${
+                    className={`px-2.5 sm:px-3.5 py-0.5 sm:py-1 text-[10px] sm:text-xs rounded-full whitespace-nowrap transition-all duration-200 border cursor-pointer select-none ${
                       isSubActive
-                        ? "bg-aurelle-gold text-aurelle-ink font-semibold border-aurelle-gold shadow-sm scale-102"
+                        ? "bg-aurelle-gold text-aurelle-ink font-semibold border-aurelle-gold shadow-xs"
                         : "bg-white/5 text-[#D8D2CA] border-white/15 hover:bg-white/10 hover:text-white"
                     }`}
                   >
