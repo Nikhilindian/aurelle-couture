@@ -9,6 +9,8 @@ import { AuthModal } from "@/components/auth/auth-modal";
 import { WishlistProvider } from "@/context/wishlist-context";
 import { WishlistDrawer } from "@/components/wishlist/wishlist-drawer";
 import { ToastProvider } from "@/context/toast-context";
+import { LocationProvider } from "@/context/location-context";
+import { LocationModal } from "@/components/layout/location-modal";
 import { WhatsAppConcierge } from "@/components/layout/whatsapp-concierge";
 import { FloatingBottomNav } from "@/components/layout/floating-bottom-nav";
 
@@ -27,18 +29,21 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-aurelle-ivory text-aurelle-ink selection:bg-aurelle-burgundy selection:text-white pb-20 sm:pb-0">
         <ToastProvider>
           <AuthProvider>
-            <WishlistProvider>
-              <CartProvider>
-                <Header />
-                <div className="flex-1 flex flex-col">{children}</div>
-                <Footer />
-                <CartDrawer />
-                <WishlistDrawer />
-                <AuthModal />
-                <WhatsAppConcierge />
-                <FloatingBottomNav />
-              </CartProvider>
-            </WishlistProvider>
+            <LocationProvider>
+              <WishlistProvider>
+                <CartProvider>
+                  <Header />
+                  <div className="flex-1 flex flex-col">{children}</div>
+                  <Footer />
+                  <CartDrawer />
+                  <WishlistDrawer />
+                  <AuthModal />
+                  <LocationModal />
+                  <WhatsAppConcierge />
+                  <FloatingBottomNav />
+                </CartProvider>
+              </WishlistProvider>
+            </LocationProvider>
           </AuthProvider>
         </ToastProvider>
       </body>

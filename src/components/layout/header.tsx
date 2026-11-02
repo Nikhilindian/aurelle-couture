@@ -8,6 +8,7 @@ import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
 import { useWishlist } from "@/context/wishlist-context";
 import { SearchModal } from "@/components/layout/search-modal";
+import { LocationBar } from "@/components/layout/location-bar";
 import {
   Search,
   ShoppingBag,
@@ -178,6 +179,9 @@ export function Header() {
           </div>
         </div>
       </Container>
+
+      {/* Global Location Selection Bar (Lifestyle style) */}
+      <LocationBar />
 
       {/* Mobile Navigation Drawer Shell (Portaled to document.body to prevent containing-block clipping) */}
       {isMobileMenuOpen && mounted && createPortal(

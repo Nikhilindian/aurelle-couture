@@ -1,29 +1,33 @@
 "use client";
 
 import * as React from "react";
-import { Truck, CheckCircle2, AlertCircle } from "lucide-react";
+import { Truck, CheckCircle2, AlertCircle, MapPin } from "lucide-react";
+import { useLocation } from "@/context/location-context";
 
 export function PincodeChecker() {
-  const [pincode, setPincode] = React.useState("");
-  const [status, setStatus] = React.useState<"idle" | "success" | "error">("idle");
-  const [estimateDate, setEstimateDate] = React.useState("");
+  const { location, setPincode: setGlobalPincode, openLocationModal, getEstimatedDeliveryDate } = useLocation();
+  const [pincode, setPincode] = React.useState(location?.pincode || "");
+  const [status, setStatus] = React.useState<"idle" | "success" | "error">(
+    location?.pincode ? "success" : "idle"
+  );
+  const [estimateDate, setEstimateDate] = React.useState(
+    location?.pincode ? getEstimatedDeliveryDate() : ""
+  );
 
-  const handleCheck = (e: React.FormEvent) => {
+  React.useEffect(() => {
+    if (location?.pincode) {
+      setPincode(location.pincode);
+      setStatus("success");
+      setEstimateDate(getEstimatedDeliveryDate());
+    }
+  }, [location, getEstimatedDeliveryDate]);
+
+  const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanPin = pincode.trim();
     if (/^\d{6}$/.test(cleanPin)) {
-      // Calculate estimated date 3 to 4 days from today
-      const today = new Date();
-      const deliveryDate = new Date(today);
-      deliveryDate.setDate(today.getDate() + 4);
-
-      const formatted = deliveryDate.toLocaleDateString("en-IN", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-      });
-
-      setEstimateDate(formatted);
+      await setGlobalPincode(cleanPin);
+      setEstimateDate(getEstimatedDeliveryDate());
       setStatus("success");
     } else {
       setStatus("error");
@@ -32,9 +36,19 @@ export function PincodeChecker() {
 
   return (
     <div className="p-4 bg-aurelle-sand/40 border border-aurelle-border space-y-3">
-      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-aurelle-charcoal">
-        <Truck className="w-4 h-4 text-aurelle-burgundy" />
-        <span>Delivery & Dispatch Availability</span>
+      <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-aurelle-charcoal">
+        <div className="flex items-center gap-2">
+          <Truck className="w-4 h-4 text-aurelle-burgundy" />
+          <span>Delivery & Dispatch Availability</span>
+        </div>
+        <button
+          type="button"
+          onClick={openLocationModal}
+          className="text-[10px] text-aurelle-burgundy hover:underline flex items-center gap-1 font-medium lowercase tracking-normal"
+        >
+          <MapPin className="w-3 h-3" />
+          change area
+        </button>
       </div>
 
       <form onSubmit={handleCheck} className="flex gap-2">
@@ -61,10 +75,13 @@ export function PincodeChecker() {
         <div className="space-y-1 text-xs text-green-800 pt-1">
           <div className="flex items-center gap-1.5 font-medium">
             <CheckCircle2 className="w-3.5 h-3.5 text-green-700" />
-            <span>Eligible for Express Air Dispatch to {pincode}</span>
+            <span>
+              Eligible for Express Air Dispatch to {pincode}
+              {location?.city ? ` (${location.city})` : ""}
+            </span>
           </div>
           <p className="text-[11px] text-aurelle-muted pl-5">
-            Estimated delivery by <strong className="text-aurelle-ink">{estimateDate}</strong>. Complimentary delivery & COD available.
+            Estimated delivery by <strong className="text-aurelle-ink">{estimateDate || getEstimatedDeliveryDate()}</strong>. Complimentary insured shipping & COD available.
           </p>
         </div>
       )}
