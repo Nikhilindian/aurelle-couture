@@ -8,6 +8,7 @@ import { Search, X, RotateCcw, Check } from "lucide-react";
 export interface FilterState {
   search: string;
   category: string;
+  subCategory?: string;
   selectedColors: string[];
   selectedSizes: string[];
   priceRange: string;

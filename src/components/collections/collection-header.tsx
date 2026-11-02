@@ -16,10 +16,45 @@ export interface CategoryIconItem {
 export interface CollectionHeaderProps {
   currentCategory: string;
   onSelectCategory: (cat: string) => void;
+  currentSubCategory?: string;
+  onSelectSubCategory?: (subCat: string) => void;
   totalCount: number;
   searchQuery?: string;
   onSearchChange?: (q: string) => void;
 }
+
+const SUB_CATEGORIES_CONFIG: Record<string, { label: string; value: string }[]> = {
+  all: [
+    { label: "All Pieces", value: "all" },
+    { label: "Sarees", value: "Sarees" },
+    { label: "Lehengas", value: "Lehengas" },
+    { label: "Kurta Sets", value: "Kurta Sets" },
+    { label: "Dupattas", value: "Dupattas" },
+    { label: "Jewellery", value: "Jewellery" },
+    { label: "Kids", value: "Kids" },
+  ],
+  clothing: [
+    { label: "All Clothing", value: "all" },
+    { label: "Sarees", value: "Sarees" },
+    { label: "Lehengas", value: "Lehengas" },
+    { label: "Kurta Sets", value: "Kurta Sets" },
+    { label: "Dupattas", value: "Dupattas" },
+  ],
+  jewellery: [
+    { label: "All Jewellery", value: "all" },
+    { label: "Chokers", value: "Chokers" },
+    { label: "Necklaces", value: "Necklaces" },
+    { label: "Earrings", value: "Earrings" },
+    { label: "Bangles", value: "Bangles" },
+  ],
+  kids: [
+    { label: "All Kids", value: "all" },
+    { label: "Boys Festive", value: "Boys Festive" },
+    { label: "Boys Sherwanis", value: "Boys Sherwanis" },
+    { label: "Girls Lehengas", value: "Girls Lehengas" },
+    { label: "Girls Anarkalis", value: "Girls Anarkalis" },
+  ],
+};
 
 const CATEGORY_ITEMS: CategoryIconItem[] = [
   {
@@ -59,10 +94,15 @@ const CATEGORY_ITEMS: CategoryIconItem[] = [
 export function CollectionHeader({
   currentCategory,
   onSelectCategory,
+  currentSubCategory = "all",
+  onSelectSubCategory,
   totalCount,
   searchQuery = "",
   onSearchChange,
 }: CollectionHeaderProps) {
+  const currentCatKey = currentCategory.toLowerCase();
+  const subCategories = SUB_CATEGORIES_CONFIG[currentCatKey] || SUB_CATEGORIES_CONFIG.all;
+
   const [isListening, setIsListening] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -234,6 +274,34 @@ export function CollectionHeader({
             })}
           </div>
         </div>
+
+        {/* 3. Sub-Categories Pill Rail (e.g. Sarees, Lehengas, Chokers, Sherwanis) */}
+        {onSelectSubCategory && subCategories && (
+          <div className="pt-2 pb-1 border-t border-white/10 mt-2">
+            <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto py-1 px-1 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {subCategories.map((sub) => {
+                const isSubActive =
+                  (currentSubCategory === "all" || !currentSubCategory)
+                    ? sub.value === "all"
+                    : currentSubCategory.toLowerCase() === sub.value.toLowerCase();
+                return (
+                  <button
+                    key={sub.label}
+                    type="button"
+                    onClick={() => onSelectSubCategory(sub.value)}
+                    className={`px-3 sm:px-3.5 py-1 text-[11px] sm:text-xs rounded-full whitespace-nowrap transition-all duration-200 border cursor-pointer select-none ${
+                      isSubActive
+                        ? "bg-aurelle-gold text-aurelle-ink font-semibold border-aurelle-gold shadow-sm scale-102"
+                        : "bg-white/5 text-[#D8D2CA] border-white/15 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {sub.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </Container>
     </div>
   );

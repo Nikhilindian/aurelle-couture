@@ -44,6 +44,7 @@ export function CollectionView({
   const [filters, setFilters] = React.useState<FilterState>({
     search: searchParam,
     category: categoryParam,
+    subCategory: "all",
     selectedColors: [],
     selectedSizes: [],
     priceRange: "all",
@@ -59,9 +60,11 @@ export function CollectionView({
   // React to searchParam changes when user clicks navigation links
   React.useEffect(() => {
     if (searchParams.get("category")) {
+      const param = searchParams.get("category") || "all";
       setFilters((prev) => ({
         ...prev,
-        category: searchParams.get("category") || "all",
+        category: param,
+        subCategory: "all",
       }));
       setCurrentPage(1);
     }
@@ -69,7 +72,12 @@ export function CollectionView({
 
   // Sync category changes with filter state
   const handleSelectCategory = (cat: string) => {
-    setFilters((prev) => ({ ...prev, category: cat }));
+    setFilters((prev) => ({ ...prev, category: cat, subCategory: "all" }));
+    setCurrentPage(1);
+  };
+
+  const handleSelectSubCategory = (subCat: string) => {
+    setFilters((prev) => ({ ...prev, subCategory: subCat }));
     setCurrentPage(1);
   };
 
@@ -77,6 +85,7 @@ export function CollectionView({
     setFilters({
       search: "",
       category: "all",
+      subCategory: "all",
       selectedColors: [],
       selectedSizes: [],
       priceRange: "all",
@@ -94,13 +103,21 @@ export function CollectionView({
         return false;
       }
 
-      // 1. Category
+      // 1. Main Category
       if (filters.category && filters.category !== "all") {
         const catFilter = filters.category.toLowerCase();
         const matchesCatName = product.category.toLowerCase() === catFilter;
         const matchesCatSlug = product.categorySlug.toLowerCase() === catFilter;
         const matchesSubCat = !!product.subCategory && product.subCategory.toLowerCase() === catFilter;
         if (!matchesCatName && !matchesCatSlug && !matchesSubCat) return false;
+      }
+
+      // 1.5. Sub-Category
+      if (filters.subCategory && filters.subCategory !== "all") {
+        const subFilter = filters.subCategory.toLowerCase();
+        const matchesSubCat = !!product.subCategory && product.subCategory.toLowerCase() === subFilter;
+        const matchesCat = product.category.toLowerCase() === subFilter;
+        if (!matchesSubCat && !matchesCat) return false;
       }
 
       // 2. Search text
@@ -185,6 +202,7 @@ export function CollectionView({
   const hasActiveFilters =
     filters.search !== "" ||
     filters.category !== "all" ||
+    (filters.subCategory && filters.subCategory !== "all") ||
     filters.selectedColors.length > 0 ||
     filters.selectedSizes.length > 0 ||
     filters.priceRange !== "all" ||
@@ -196,6 +214,8 @@ export function CollectionView({
       <CollectionHeader
         currentCategory={filters.category}
         onSelectCategory={handleSelectCategory}
+        currentSubCategory={filters.subCategory}
+        onSelectSubCategory={handleSelectSubCategory}
         totalCount={filteredProducts.length}
         searchQuery={filters.search}
         onSearchChange={(q) => {
@@ -248,6 +268,11 @@ export function CollectionView({
             {filters.category !== "all" && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]">
                 Category: {filters.category}
+              </span>
+            )}
+            {filters.subCategory && filters.subCategory !== "all" && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-aurelle-cream text-aurelle-ink border border-aurelle-border text-[11px]">
+                Sub-Category: {filters.subCategory}
               </span>
             )}
             {filters.search && (
